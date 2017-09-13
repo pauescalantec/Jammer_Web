@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jammer Registry</title>
+  <link rel="stylesheet" href="CSS/styles.css" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="js/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="banner">
+    <img style="vertical-align: middle;" src="media/jammer_logo_home.png" alt="Add Block" width="7%;">
+    <h1 class="jammerTitle">Jammer</h1>
+  </div>
+  <div class="jumbotron">
+    <h1 style="margin-left: 10px;">Welcome to Jammer</h1> 
+    <p style="margin-left: 10px;">This is the home page.</p> 
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3>Comments</h3></div>
+          <div class="panel-body">
+            <ul id="commentSection" class="list-group">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h3>Add Comments</h3></div>
+          <div class="panel-body">
+            <textarea id="newCommentText" class="form-control" rows="5" id="comment"></textarea>
+            <input id="newCommentSubmit" class="buttonLogin-small"  style="display: block;" type="button" value="Add comment"></input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="js/home.js"></script>
+</body>
+</html>

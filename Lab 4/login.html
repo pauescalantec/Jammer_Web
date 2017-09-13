@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jammer Sign In</title>
+  <link rel="stylesheet" href="CSS/styles.css" type="text/css">
+  <script src="js/jquery.js"></script>
+</head>
+<body>
+  <div class="banner">
+    <img style="vertical-align: middle;" src="media/jammer_logo_home.png" alt="Add Block" width="7%;">
+    <h1 class="jammerTitle">Jammer</h1>
+  </div>
+  <div id="wrapper">
+    <form class="content">
+      <h2>Please sign in</h2>
+      <fieldset>
+        <div style="overflow: hidden;">
+          <p class="field">Username
+            <span id="userNameEmpty" class="errorSpan"> Please type your username</span>
+            <span id="userInvalid" class="errorSpan"> Invalid credentials</span>
+          </p>
+          <input id="nameField" class="formElement" type="text" name="completeName"><br>
+        </div>
+        <div style="overflow: hidden;">
+          <p class="field">Password 
+            <span id="userPasswordEmpty" class="errorSpan"> Please type your password</span>
+          </p>
+          <input id="passwordField" class="formElement" type="password" name="password"><br>
+        </div>
+        <input id="Remember" type="checkbox" name="rememberMe" value="Remember">
+        <p class="checkboxField">Remember me</p>
+        <div style="text-align:center;">
+        <input id="submitButton" class="buttonLogin-small" type="submit" value="Sign In"></input>
+        </div>
+      </fieldset>
+      <p>
+        <div style="text-align: center;">Don't have an account with Jammer? </div>
+      </p>
+      <div style="text-align: center;">
+        <input class="buttonRegister-small" type="button" onclick="location.href = 'register.html';" value="Register"></input>
+      </div>
+    </form>
+    <div class='push'></div>
+  </div>
+  <div class="footer">
+    <p style="margin-top: 0px;"><strong>Jammer</strong></p>
+    Connecting and sharing with people since <span style="font-weight:bold;">2017</span>
+  </div>
+  <script type="text/javascript" src="js/login.js"></script>
+</body>
+</html>
