@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8"/>
   <title>Jammer</title>
   <link rel="stylesheet" href="CSS/styles.css" type="text/css">
+  <link href="css/flags.css" rel=stylesheet type="text/css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="js/jquery.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
   <div class="banner">
@@ -21,44 +21,82 @@
           <span class="icon-bar"></span> 
         </button>
       </div>
+
       <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
+        <ul id="leftMenu" class="nav navbar-nav">
+          <li class="active home"><a href="#">Home</a></li>
+          <li class="about"><a href="#">About</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+        <ul id="rightMenu" class="nav navbar-nav navbar-right">
+          <li id="profileSection "class="profile"><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
         </ul>
       </div>
+      
     </nav>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="panel panel-default">
-            <div class="panel-heading"><h3>Comments</h3></div>
-            <div class="panel-body">
-              <ul id="commentSection" class="list-group">
-              </ul>
+
+    <div id ="homeSection" class="selectedSection"> 
+      <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-heading"><h3>Comments</h3></div>
+                <div class="panel-body">
+                  <ul id="commentSection" class="list-group">
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-heading"><h3>Add Comments</h3>
+                </div>
+                <div class="panel-body">
+                  <textarea id="newCommentText" class="form-control" rows="5" id="comment"></textarea>
+                  <input type="submit" id="newCommentSubmit" class="buttonLogin-small"  style="display: inline-block;" type="button" value="Add comment">
+                    <span id="commentEmpty" class="errorSpan">
+                      Please type a comment
+                    </span>
+                  </input>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="panel panel-default">
-            <div class="panel-heading"><h3>Add Comments</h3></div>
-            <div class="panel-body">
-              <textarea id="newCommentText" class="form-control" rows="5" id="comment"></textarea>
-              <input id="newCommentSubmit" class="buttonLogin-small"  style="display: block;" type="button" value="Add comment"></input>
-            </div>
-          </div>
+    </div>
+
+    <div id ="profileSection" class="notSelectedSection"> 
+      <div class="container">
+        <div class="jumbotron">
+          <h1 id="name">First Name <br> Last Name</h1> 
+        </div>
+        <legend>Username </legend>
+        <div id="username" class="well">username</div>
+        <legend>Email </legend>
+        <div id="email" class="well">Email@email.com</div>
+        <legend>Gender </legend>
+        <div id="gender" class="well">Gender </div>
+        <legend>Country </legend>
+        <div id="country" class="well">
+          Country
         </div>
       </div>
     </div>
+
+    <div id ="aboutSection" class="notSelectedSection"> 
+        <div class="container">
+          <div class="well">About</div>
+        </div>
+    </div>
+
     <div class='push'></div>
   </div>
   <div class="footer2">
     <p style="margin-top: 0px;"><strong>Jammer</strong></p>
     Connecting and sharing with people since <span style="font-weight:bold;">2017</span>
   </div>
+  <script src="js/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/flags.js"></script> 
   <script type="text/javascript" src="js/home.js"></script>
 </body>
 </html>

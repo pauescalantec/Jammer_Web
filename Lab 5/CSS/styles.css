@@ -40,6 +40,14 @@ fieldset{
     text-align: center;
 }
 
+.selectedSection {
+  display: block;
+}
+
+.notSelectedSection {
+  display: none;
+}
+
 .formElement{
     overflow: hidden;
     white-space: nowrap;

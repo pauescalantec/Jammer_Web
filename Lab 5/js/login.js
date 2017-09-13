@@ -1,5 +1,5 @@
-var validUser = "lab4";
-var validPass = "lab4";
+var validUser = "lab5";
+var validPass = "lab5";
 
 // Jquery methods
 $(document).ready(function(){
