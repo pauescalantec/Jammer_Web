@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jammer Registry</title>
+  <link rel="stylesheet" href="CSS/styles.css" type="text/css">
+  <script src="js/jquery.js"></script>
+</head>
+<body>
+  <div class="banner">
+    <img style="vertical-align: middle;" src="media/jammer_logo_home.png" alt="Add Block" width="7%" height="auto">
+    <h1 class="jammerTitle">Jammer</h1>
+  </div>
+  <form class="content">
+    <h2>Please register</h2>
+    <fieldset>
+      <div style="overflow: hidden;">
+        <p class="field">First Name 
+          <span id="firstNameEmpty" class="errorSpan"> Please type your first name</span>
+        </p>
+        <input id="firstName" class="formElement" type="text" name="firstName"><br>
+      </div>
+      <div style="overflow: hidden;">
+        <p class="field">Last Name 
+          <span id="lastNameEmpty" class="errorSpan"> Please type your last name</span>
+        </p>
+        <input id="lastName" class="formElement" type="text" name="lastName"><br>
+      </div>
+      <div style="overflow: hidden;">
+        <p class="field">Username 
+          <span id="usernameEmpty" class="errorSpan"> Please type your username</span>
+        </p>
+        <input id="username" class="formElement" type="text" name="userName"><br>
+      </div>
+      <div style="overflow: hidden;">
+       <p class="field">Email
+          <span id="emailEmpty" class="errorSpan"> Please type your email</span>
+        </p>
+        <input  id="email" class="formElement" type="email" name="email"><br>
+      </div>
+      <div style="overflow: hidden;">
+        <p class="field">Password 
+          <span id="passwordEmpty" class="errorSpan"> Please type your password</span>
+          <span id="passwordInvalid" class="errorSpan"> Passwords must match</span>
+        </p>
+        <input id="password" class="formElement" type="password" name="password"><br>
+      </div>
+      <div style="overflow: hidden;">
+        <p class="field">Password Confirmation 
+          <span id="passwordConfirmationEmpty" class="errorSpan"> Please re-type your password</span>
+        </p>
+        <input id="passwordConfirmation" class="formElement" type="password" name="passwordConfirmation"><br>
+      </div>
+      <p class="field">Country 
+        <span id="countryEmpty" class="errorSpan"> Please choose your country</span>
+      </p>
+      <div style="text-align: left; padding-left: 10px;">
+       <select id="country">
+        <option value="0">Select a country...</option>
+        <option value="1">Haiti</option>
+        <option value="2">United States</option>
+        <option value="3">Israel</option>
+        <option value="4">Brazil</option>
+        <option value="5">Mexico</option>
+        <option value="6">United Kingdom</option>
+        <option value="7">Canada</option>
+        <option value="8">Spain</option>
+        <option value="9">China</option>
+        <option value="10">Australia</option>
+        <option value="11">Russia</option>
+        <option value="12">New Zealand</option>
+        <option value="13">Nicaragua</option>
+        <option value="14">Italy</option>
+        <option value="15">Germany</option>
+      </select>
+      </div>
+      <p class="field">Gender 
+        <span id="genderEmpty" class="errorSpan"> Please pick your gender</span>
+      </p>
+      <div style="text-align: left; padding-left: 13px; font-size: 15px;">
+        <input id="genderMale" class="radio" type="radio" name="gender" value="male"> Male
+      </div>
+      <div style="text-align: left; padding-left: 13px; font-size: 15px;">
+        <input id="genderFemale" class="radio" type="radio" name="gender" value="female"> Female
+      </div>
+      <div style="text-align:center;">
+        <input id="cancelButton" class="buttonRegister-small" type="reset" value="Cancel"></input>
+        <input id="submitButton" class="buttonSubmit-small" type="submit" value="Register"></input>
+      </div>
+    </fieldset>
+  </form>
+  <div class="footer1">
+    <p style="margin-top: 0px;"><strong>Jammer</strong></p>
+    Connecting and sharing with people since <span style="font-weight:bold;">2017</span>
+  </div>
+  <script type="text/javascript" src="js/register.js"></script>
+</body>
+</html>
