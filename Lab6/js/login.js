@@ -38,7 +38,7 @@ function passwordFocusOut(){
 // Helper listener function
 function submitListener() {
     var validInput = true;
-    var validCredentials = false;
+    var validCredentials = true;
 
     $("#userInvalid").hide();
     var nameField = $("#nameField").val();
@@ -63,31 +63,22 @@ function submitListener() {
     }
 
     if(validInput){
-        var jsonData = { 
-            "uName" : nameField,
-            "uPassword" : passwordField
-        };
+        // check username
+        if(nameField != validUser){
+            validCredentials = false;
+        }
 
-        // PHP login service
-        $.ajax({
-            url: "./data/login.php",
-            type: "POST",
-            data: jsonData,
-            dataType: "json",
-            success: function (jsonResponse){
-                validCredentials = true;     
-                window.location.href = "home.php";        
-            },
-            error: function (errorMessage){
-                validCredentials = false;
-                if (errorMessage.status == "406"){
-                    $("#userInvalid").show();
-                }
+        // check password
+        if(passwordField != validPass){
+            validCredentials = false;
+        }
+    }
 
-                else {
-                    alert(errorMessage.responseText + " Please try again.");
-                }
-            }
-        });
+    if(!validCredentials){
+        $("#userInvalid").show();
+    }
+
+    if(validInput && validCredentials) {
+        window.location.href = "home.html";
     }
 }
