@@ -31,9 +31,19 @@
                 $response = array("firstname"=>$row["fName"], "lastname"=>$row["lName"]);
             }
 
-            session_start();
             // Store Session Data
+            session_start();
+            
             $_SESSION['currentUser']= $varName;
+            $_SESSION['fName'] = $response['firstname'];
+            $_SESSION['lName'] = $response['lastname'];
+
+            if($_POST["checkbox"] == "on"){
+                // Store cookie data
+                $cookie_name = "savedUser";
+                $cookie_value = $varName;
+                setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+            }
 
             echo json_encode($response);
         }

@@ -1,14 +1,22 @@
-var currentUser = "pecster";
+var currentUser = "";
+var totalComments = 0;
 
 // JQuery
 $(document).ready(function(){
     // Hide all error spans
     $(".errorSpan").hide();
 
+    // Check session
+    checkSession("./data/session.php");
+
     // Submit button listener
     $("#newCommentSubmit").click(function( event ) {
         event.preventDefault();
         newCommentListener();
+    });
+
+    $("#logoutButton").click(function( event ) {
+        handleLogout("./data/deleteSession.php");
     });
 
     // Change on gender elements
@@ -20,32 +28,93 @@ $(document).ready(function(){
         getProfileData("./data/loadProfile.php");
    });
 
-    // Uses AJAX
-    getCommentsData("./data/loadComments.php");
-
     // Menu control
     $("#myNavbar li").on("click", function(){
 		$(".active").removeClass("active");
-		var currentClass = $(this).attr("class");
-		$(this).addClass("active");
+        var currentClass = $(this).attr("class");
 
-        $(".selectedSection").removeClass("selectedSection").addClass("notSelectedSection");
-
-		$("#" + currentClass + "Section").addClass("selectedSection").removeClass("notSelectedSection").trigger('classChange');
+        // Options is just a dropdown menu
+        if (currentClass != "dropdown" && currentClass != "options" && currentClass != "dropdown open") {
+            $(this).addClass("active");
+            
+            $(".selectedSection").removeClass("selectedSection").addClass("notSelectedSection");
+    
+            $("#" + currentClass + "Section").addClass("selectedSection").removeClass("notSelectedSection").trigger('classChange');
+        }
 	});
 });
 
+function handleLogout(urlPHP){
+    $.ajax({
+        url: urlPHP,
+        type: "GET",
+        success: function(jsonResponse) {
+            window.location.replace("index.html");
+        },
+        error: function() {
+            alert("Error logging out. Try again later.");
+        }
+    });   
+}
+
+function checkSession(urlPHP){
+    $.ajax({
+        url: urlPHP,
+        type: "GET",
+        dataType: "json",
+        success: function(jsonResponse) {
+            $('#profileText').html('<span class="glyphicon glyphicon-user"></span> ' + jsonResponse.fName + " " + jsonResponse.lName);
+            currentUser = jsonResponse.currentUser;
+            // Uses AJAX
+            getCommentsData("./data/loadComments.php");
+        },
+        error: function() {
+            currentUser = "";
+            window.location.replace("index.html");
+        }
+    });   
+}
+
 function newCommentListener() {
-    var nameField = currentUser;
     var text = $("#newCommentText").val();
 
     if(text.trim() != ''){
-        $("#commentEmpty").hide();
-        $("#commentSection" ).append('<li class="list-group-item"> <span style="font-weight:bold">' + nameField + "<br> </span> " + text + '</li>');
+        // Key for comment
+        var dt = new Date();
+        var utcDate = dt.toUTCString().replace(/\s/g, '');
+        var dbKey = totalComments + currentUser + utcDate;
+
+        var jsonData = { 
+            "dbKey" : dbKey,
+            "text" : text
+        };
+
+        // Insert to DB
+        postComment("./data/postComment.php", jsonData);
+        /*$("#commentSection" ).append('<li class="list-group-item"> <span style="font-weight:bold">' + nameField + "<br> </span> " + text + '</li>');*/
     }
     else {
         $("#commentEmpty").show();
     }
+}
+
+function postComment(urlPHP, jsonData){
+    // PHP login service
+    $.ajax({
+        url: urlPHP,
+        type: "POST",
+        data: jsonData,
+        dataType: "json",
+        success: function (jsonResponse){    
+            // Reload comments
+            getCommentsData("./data/loadComments.php");
+        
+            $("#commentEmpty").hide();
+        },
+        error: function (errorMessage){
+            alert(errorMessage.responseText);
+        }
+    });
 }
 
 function populateProfile(jsonResponse) {  
@@ -73,18 +142,18 @@ function populateProfile(jsonResponse) {
 }
 
 function getCommentsData(urlPHP) {
-    var jsonData = { 
-        "uName" : currentUser
-    };
-
     // PHP login service
     $.ajax({
         url: urlPHP,
         type: "GET",
         dataType: "json",
         success: function (jsonResponse){    
+            $("#commentSection").html("");
+            totalComments = 0;
+
             for (var key in jsonResponse) {
-                if (jsonResponse.hasOwnProperty(key)) {        
+                if (jsonResponse.hasOwnProperty(key)) {
+                    totalComments ++;            
                     $("#commentSection").append('<li class="list-group-item"> <strong>' + jsonResponse[key].owner + "<br> </strong> " + jsonResponse[key].note + '</li>');
                 }
             }
@@ -103,9 +172,6 @@ function getCommentsData(urlPHP) {
 }
 
 function getProfileData(urlPHP) {
-    var jsonData = { 
-        "uName" : currentUser
-    };
     // Get JSON from ProfileData PHP
     $.ajax({
         url: urlPHP,

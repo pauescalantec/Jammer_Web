@@ -3,6 +3,8 @@ var genderChosen = false;
 
 // Jquery methods
 $(document).ready(function(){
+    // check session here, if already logged in do not attempt register
+
     // Hide all error spans
     $(".errorSpan").hide();
 
@@ -123,7 +125,7 @@ function registerUser(urlPHP, jsonData){
         dataType : "json",
         ContentType : "application/json",
         success: function(jsonData) {
-            window.location.replace("home.php");
+            window.location.replace("home.html");
         },
         error: function(errorMessage){
             if(errorMessage.status == "409") {

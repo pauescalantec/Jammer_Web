@@ -7,8 +7,6 @@
     $password = "root";
     $dbname = "jammerDB"; 
 
-    session_start();
-
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     if($conn->connect_error)
@@ -45,6 +43,8 @@
                 session_start();
                 // Store Session Data
                 $_SESSION['currentUser']= $uName;
+                $_SESSION['fName']= $fName;
+                $_SESSION['lName']= $lName;
 
                 echo json_encode("New record created successfully");
             } 

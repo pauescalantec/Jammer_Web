@@ -3,6 +3,9 @@ var validPass = "lab5";
 
 // Jquery methods
 $(document).ready(function(){
+    // check session here, if already logged in do not attempt log in
+    getCookieData("./data/getCookie.php");
+
     // Hide all error spans
     $(".errorSpan").hide();
 
@@ -23,6 +26,18 @@ $(document).ready(function(){
     });
 });
 
+function getCookieData(urlPHP){
+    // PHP cookie service
+    $.ajax({
+        url: urlPHP,
+        type: "GET",
+        dataType: "json",
+        success: function (jsonResponse){
+            $("#nameField").val(jsonResponse.savedUser);    
+        }
+    });
+}
+
 // Check userName
 function userNameFocusOut(){
     $("#userInvalid").hide();
@@ -38,7 +53,7 @@ function passwordFocusOut(){
 // Helper listener function
 function submitListener() {
     var validInput = true;
-    var validCredentials = true;
+    var validCredentials = false;
 
     $("#userInvalid").hide();
     var nameField = $("#nameField").val();
@@ -63,22 +78,37 @@ function submitListener() {
     }
 
     if(validInput){
-        // check username
-        if(nameField != validUser){
-            validCredentials = false;
+        var checkbox = "off";
+        if($("#remember").is(":checked")){
+            checkbox = "on";
         }
+        
+        var jsonData = { 
+            "uName" : nameField,
+            "uPassword" : passwordField,
+            "checkbox" : checkbox
+        };
 
-        // check password
-        if(passwordField != validPass){
-            validCredentials = false;
-        }
-    }
+        // PHP login service
+        $.ajax({
+            url: "./data/login.php",
+            type: "POST",
+            data: jsonData,
+            dataType: "json",
+            success: function (jsonResponse){
+                validCredentials = true;     
+                window.location.href = "home.html";        
+            },
+            error: function (errorMessage){
+                validCredentials = false;
+                if (errorMessage.status == "406"){
+                    $("#userInvalid").show();
+                }
 
-    if(!validCredentials){
-        $("#userInvalid").show();
-    }
-
-    if(validInput && validCredentials) {
-        window.location.href = "home.html";
+                else {
+                    alert(errorMessage.responseText + " Please try again.");
+                }
+            }
+        });
     }
 }
