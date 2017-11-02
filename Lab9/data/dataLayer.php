@@ -331,8 +331,37 @@
 			if ($connection != null){ 
 				$sql = "INSERT INTO Users(fName, lName, email, gender, country, username, passwrd) VALUES ('$fName', '$lName', '$uEmail', '$uGender', '$uCountry', '$uName', '$uPassword')";
 				
-				if (mysqli_query($conn, $sql)) {
-					$response = array("firstname"=>$row["fName"], "lastname"=>$row["lName"], "MESSAGE"=>"SUCCESS");
+				if (mysqli_query($connection, $sql)) {
+					$response = array("MESSAGE"=>"SUCCESS");
+					$connection->close();
+					return $response;
+				}
+
+				else{
+					$connection->close();
+					return array("MESSAGE"=>"406");
+				}
+			
+			}
+			else{
+				return array("MESSAGE"=>"500");
+			}
+		}
+
+		else{
+			return array("MESSAGE"=>"409");
+		}
+
+	}
+
+	function dataEncryptedRegister($uName, $uPassword, $fName, $lName, $uEmail, $uCountry, $uGender){
+		if (userNotExists($uName)){
+			$connection = databaseConnection();
+			
+			if ($connection != null){ 
+				$sql = "INSERT INTO Users(fName, lName, email, gender, country, username, passwrd) VALUES ('$fName', '$lName', '$uEmail', '$uGender', '$uCountry', '$uName', '$uPassword')";
+				if (mysqli_query($connection, $sql)) {
+					$response = array("MESSAGE"=>"SUCCESS");
 					$connection->close();
 					return $response;
 				}
@@ -381,6 +410,60 @@
 			if ($result->num_rows > 0){
 				while ($row = $result->fetch_assoc()){
 					$response = array("firstname"=>$row["fName"], "lastname"=>$row["lName"], "MESSAGE"=>"SUCCESS");
+				}		
+
+				$connection->close();
+				return $response;
+			}
+			else{
+				$connection->close();
+				return array("MESSAGE"=>"406");
+			}
+		}
+		else{
+			return array("MESSAGE"=>"500");
+		}
+
+	}
+
+	function encryptedDataLogin($uName){
+		$connection = databaseConnection();
+
+		if ($connection != null){
+			$sql = "SELECT fName, lName FROM Users WHERE username = '$uName'";
+
+			$result = $connection->query($sql);
+
+			if ($result->num_rows > 0){
+				while ($row = $result->fetch_assoc()){
+					$response = array("firstname"=>$row["fName"], "lastname"=>$row["lName"], "MESSAGE"=>"SUCCESS");
+				}		
+
+				$connection->close();
+				return $response;
+			}
+			else{
+				$connection->close();
+				return array("MESSAGE"=>"406");
+			}
+		}
+		else{
+			return array("MESSAGE"=>"500");
+		}
+
+	}
+
+	function bringEncryptedPassword($uName){
+		$connection = databaseConnection();
+
+		if ($connection != null){
+			$sql = "SELECT passwrd FROM Users WHERE username = '$uName'";
+
+			$result = $connection->query($sql);
+
+			if ($result->num_rows > 0){
+				while ($row = $result->fetch_assoc()){
+					$response = array("password"=>$row["passwrd"], "MESSAGE"=>"SUCCESS");
 				}		
 
 				$connection->close();

@@ -105,7 +105,7 @@ function submitListener() {
                 "uEmail" : $("#email").val(),
                 "uCountry" : $("#country option:selected").text(),
                 "uGender" : $('input[name="gender"]:checked').val(),
-                "action" : "REGISTRATION"
+                "action" : "EREGISTRATION"
             };
 
             // register user
@@ -129,7 +129,7 @@ function registerUser(urlPHP, jsonData){
             window.location.replace("home.html");
         },
         error: function(errorMessage){
-            if(errorMessage.status == "409") {
+            if(errorMessage.status == "409" || errorMessage.status == "406" ) {
                 $("#usernameEmpty").hide();
                 $("#usernameUsed").show();
             }

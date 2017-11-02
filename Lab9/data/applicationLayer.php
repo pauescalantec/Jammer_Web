@@ -2,14 +2,19 @@
 	header('Content-type: application/json');
 	header('Accept: application/json');
 	require_once __DIR__ . '/dataLayer.php';
+	require_once __DIR__ . '/defuse-crypto.phar';
 
 	$action = $_POST["action"];
 
 	switch($action)
 	{
 		case "LOGIN" : loginFunction();
+						break;
+		case "ELOGIN" : encryptedLoginFunction();
 						break;	
 		case "REGISTRATION" : registrationFunction();
+						break;
+		case "EREGISTRATION" : encryptedRegistrationFunction();
 						break;
 		case "LOADCOMMENTS" : loadCommentsFunction();
 						break;
@@ -39,13 +44,30 @@
 						break;
 	}
 
-	function startSessionFunction($uName, $response, $checkbox){
+	function createEncryptionProtectedKey($password){
+		$sessionKey = getSessionKey();
+		$userKey = \Defuse\Crypto\Key::loadFromAsciiSafeString($sessionKey);
+
+		$encrypted_password = \Defuse\Crypto\Crypto::encrypt($password, $userKey);
+
+		$responseEncoded = array("password"=>$encrypted_password);
+		return $responseEncoded;
+	}
+
+	function decryptPassword($password){
+		$storedKey = \Defuse\Crypto\Key::loadFromAsciiSafeString(getSessionKey());
+		$decryptedPassword = \Defuse\Crypto\Crypto::decrypt($password, $storedKey);
+
+		return $decryptedPassword;
+	}
+
+	function startSessionFunction($uName, $fName, $lName, $checkbox){
 		// Store Session Data
 		session_start();
 		
 		$_SESSION['currentUser']= $uName;
-		$_SESSION['fName'] = $response['firstname'];
-		$_SESSION['lName'] = $response['lastname'];
+		$_SESSION['fName'] = $fName;
+		$_SESSION['lName'] = $lName;
 
 		if($checkbox == "on"){
 			// Store cookie data
@@ -69,6 +91,11 @@
 		return $uName;
 	}
 
+	function getSessionKey(){
+		$config = include(__DIR__ . '/config.php');
+		return $config['hardcodedKey'];
+	}
+
 	function loginFunction() {
 		$uName = $_POST["uName"];
 		$varPassword = $_POST["uPassword"];
@@ -89,6 +116,45 @@
 		}
 	}	
 
+	function encryptedLoginFunction() {
+		$uName = $_POST["uName"];
+		$varPassword = $_POST["uPassword"];
+		$checkbox = $_POST["checkbox"];
+
+		// To encrypt password
+		$responseKey = bringEncryptedPassword($uName);
+
+		if ($responseKey["MESSAGE"] == "SUCCESS") {
+			$decryptedPassword = decryptPassword($responseKey["password"]);
+
+			if ($decryptedPassword == $varPassword) {
+				$loginResponse = encryptedDataLogin($uName);
+
+				if ($loginResponse["MESSAGE"] == "SUCCESS") {
+					$response = array("firstname"=>$loginResponse["firstname"], "lastname"=>$loginResponse["lastname"]);
+					
+					startSessionFunction($uName, $response['firstname'], $response['lastname'], $checkbox);
+					
+					echo json_encode($response);
+				}
+
+				else {
+					genericErrorFunction($loginResponse["MESSAGE"]);	
+				}
+
+			}
+	
+			else {
+				genericErrorFunction("406");	
+			}
+		}
+
+		else {
+			genericErrorFunction("406");	
+		}
+	
+	}	
+
 	function registrationFunction() {
 		$uName = $_POST["uName"];
 		$uPassword = $_POST['uPassword'];
@@ -97,13 +163,13 @@
 		$uEmail = $_POST['uEmail'];
 		$uCountry = $_POST['uCountry'];
 		$uGender = $_POST['uGender'];
-		
+
 		$registrationResponse = dataRegister($uName, $uPassword, $fName, $lName, $uEmail, $uCountry, $uGender);
 
-		if ($loginResponse["MESSAGE"] == "SUCCESS") {
+		if ($registrationResponse["MESSAGE"] == "SUCCESS") {
 			$response = "New record created successfully";
 
-			startSessionFunction($uName, $registrationResponse, "off");
+			startSessionFunction($uName, $fName, $lName, "off");
 			echo json_encode($response);
 		}
 
@@ -112,9 +178,33 @@
 		}
 	}	
 
+	function encryptedRegistrationFunction() {
+		$uName = $_POST["uName"];
+		$uPassword = $_POST['uPassword'];
+		$fName = $_POST['fName'];
+		$lName = $_POST['lName'];
+		$uEmail = $_POST['uEmail'];
+		$uCountry = $_POST['uCountry'];
+		$uGender = $_POST['uGender'];
+		$protectedKey = CreateEncryptionProtectedKey($uPassword);
+
+		$eRegistrationResponse = dataEncryptedRegister($uName, $protectedKey["password"], $fName, $lName, $uEmail, $uCountry, $uGender);
+
+		if ($eRegistrationResponse["MESSAGE"] == "SUCCESS") {
+			$response = "New record created successfully";
+
+			startSessionFunction($uName, $fName, $lName, "off");
+			echo json_encode($response);
+		}
+
+		else {
+			genericErrorFunction($eRegistrationResponse["MESSAGE"]);	
+		}
+	}
+
 	function loadFriendsFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 
 			$loadFriendsResponse = dataLoadFriends($uName);
 
@@ -135,7 +225,7 @@
 
 	function loadRequestsFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 
 			$loadRequestsResponse = dataLoadRequests($uName);
 
@@ -156,7 +246,7 @@
 
 	function countRequestsFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 
 			$countRequestsResponse = dataCountRequests($uName);
 
@@ -177,7 +267,7 @@
 
 	function loadCommentsFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 
 			$loadCommentsResponse = dataLoadComments($uName);
 
@@ -198,7 +288,7 @@
 
 	function searchFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 			$searchField = $_POST["searchField"];
 
 			$searchResponse = dataSearch($uName, $searchField);
@@ -220,7 +310,7 @@
 
 	function loadProfileFunction() {
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 
 			$loadProfileResponse = dataLoadProfile($uName);
 
@@ -243,7 +333,7 @@
 		$dbKey = $_POST["dbKey"];
 		$text = $_POST["text"];
 		$uName = getSessionUser();
-		if ($uName != NULL){
+		if (!is_null($uName)){
 			$postCommentResponse = dataPostComment($uName, $dbKey, $text);
 
 			if ($postCommentResponse["MESSAGE"] == "SUCCESS") {
@@ -265,7 +355,7 @@
 		$friendName = $_POST["friendName"];
 		$uName = getSessionUser();
 
-		if ($uName != NULL){
+		if (!is_null($uName)){
 			$acceptRequestResponse = dataAcceptRequest($friendName, $uName);
 
 			if ($acceptRequestResponse["MESSAGE"] == "SUCCESS") {
@@ -287,7 +377,7 @@
 		$friendName = $_POST["friendName"];
 		$uName = getSessionUser();
 
-		if ($uName != NULL){
+		if (!is_null($uName)){
 			$sendRequestResponse = dataSendRequest($friendName, $uName);
 
 			if ($sendRequestResponse["MESSAGE"] == "SUCCESS") {
@@ -309,7 +399,7 @@
 		$friendName = $_POST["friendName"];
 		$uName = getSessionUser();
 
-		if ($uName != NULL){
+		if (!is_null($uName)){
 			$rejectRequestResponse = dataRejectRequest($friendName, $uName);
 
 			if ($rejectRequestResponse["MESSAGE"] == "SUCCESS") {

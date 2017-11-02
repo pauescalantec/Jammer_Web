@@ -91,7 +91,7 @@ function submitListener() {
             "uName" : nameField,
             "uPassword" : passwordField,
             "checkbox" : checkbox,
-            "action" : "LOGIN"
+            "action" : "ELOGIN"
         };
 
         // PHP login service
